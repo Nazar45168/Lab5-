@@ -14,7 +14,7 @@ public:
 	std::string GetSubStr(int nPos, int nLength = -1);
 	const char* GetFullString();
 
-protected:
+	// ѕерем≥ст≥ть m_sChain в розд≥л public
 	std::string m_sChain;
 };
 

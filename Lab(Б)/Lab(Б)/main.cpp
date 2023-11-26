@@ -1,15 +1,38 @@
 #include <iostream>
 #include "DataChain.h"
+#include "CWorkspace.h"
 
 int main()
 {
-	CDataSimple dataSimple;
-	dataSimple.Generate(3, 5);
+	CDataSimple data;
+	CWorkspace ws(data);
 
-	std::cout << "Generated Data: " << dataSimple.GetFullString() << std::endl;
-	std::cout << "Length: " << dataSimple.GetLength() << std::endl;
-	std::cout << "Find '23' at position: " << dataSimple.Find("23") << std::endl;
-	std::cout << "Substr from position 5: " << dataSimple.GetSubStr(5) << std::endl;
+	// Ініціалізуємо послідовність у робочому просторі
+	ws.Init(3, 5);
+
+	// Виводимо послідовність
+	std::cout << "Generated Data: " << ws.GetChainString() << std::endl;
+
+	// Зберігаємо стан робочого простору у файл
+	if (ws.Save("workspace.txt"))
+	{
+		std::cout << "Workspace saved to file." << std::endl;
+	}
+	else
+	{
+		std::cout << "Error saving workspace to file." << std::endl;
+	}
+
+	// Завантажуємо стан робочого простору із файлу
+	if (ws.Load("workspace.txt"))
+	{
+		std::cout << "Workspace loaded from file." << std::endl;
+		std::cout << "Loaded Data: " << ws.GetChainString() << std::endl;
+	}
+	else
+	{
+		std::cout << "Error loading workspace from file." << std::endl;
+	}
 
 	return 0;
 }
