@@ -1,20 +1,30 @@
 #include <iostream>
 #include "DataChain.h"
 #include "CWorkspace.h"
+#include "CDlgCommand.h"
+#include "CDialogManager.h"
 
-int main()
+void InitSequence(CWorkspace& ws)
 {
-	CDataSimple data;
-	CWorkspace ws(data);
+	int depth, length;
+	std::cout << "Enter depth: ";
+	std::cin >> depth;
+	std::cout << "Enter length: ";
+	std::cin >> length;
+	ws.Init(depth, length);
+}
 
-	// Ініціалізуємо послідовність у робочому просторі
-	ws.Init(3, 5);
-
-	// Виводимо послідовність
+void ShowFullSequence(CWorkspace& ws)
+{
 	std::cout << "Generated Data: " << ws.GetChainString() << std::endl;
+}
 
-	// Зберігаємо стан робочого простору у файл
-	if (ws.Save("workspace.txt"))
+void SaveWorkspace(CWorkspace& ws)
+{
+	std::string filename;
+	std::cout << "Enter filename to save: ";
+	std::cin >> filename;
+	if (ws.Save(filename))
 	{
 		std::cout << "Workspace saved to file." << std::endl;
 	}
@@ -22,17 +32,35 @@ int main()
 	{
 		std::cout << "Error saving workspace to file." << std::endl;
 	}
+}
 
-	// Завантажуємо стан робочого простору із файлу
-	if (ws.Load("workspace.txt"))
+void LoadWorkspace(CWorkspace& ws)
+{
+	std::string filename;
+	std::cout << "Enter filename to load: ";
+	std::cin >> filename;
+	if (ws.Load(filename))
 	{
 		std::cout << "Workspace loaded from file." << std::endl;
-		std::cout << "Loaded Data: " << ws.GetChainString() << std::endl;
 	}
 	else
 	{
 		std::cout << "Error loading workspace from file." << std::endl;
 	}
+}
+
+int main()
+{
+	CDataSimple data;
+	CWorkspace ws(data);
+	CDialogManager mgr(ws);
+
+	mgr.RegisterCommand("Init sequence", InitSequence);
+	mgr.RegisterCommand("Show sequence", ShowFullSequence);
+	mgr.RegisterCommand("Save", SaveWorkspace);
+	mgr.RegisterCommand("Load", LoadWorkspace);
+
+	mgr.Run();
 
 	return 0;
 }
